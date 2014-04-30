@@ -8,7 +8,7 @@ abstract class CardSet {
      */
     protected $cards = array();
 
-    public function __construct(array $cards) {
+    public function __construct($cards = array()) {
         $this->cards = $cards;
     }
 
@@ -21,12 +21,12 @@ abstract class CardSet {
     }
 
     public function allCards() {
-        foreach ($this->cards as $card) {
+        /*foreach ($this->cards as $card) {
             $cards .= $card->render() . ", ";
         }
         $cards = substr($cards, 0, -2);
-        return $cards;
-        #return $this->cards;
+        return $cards;*/
+        return $this->cards;
     }
 
     public function cardCount() {

@@ -8,34 +8,50 @@ abstract class CardSet {
      */
     protected $cards = array();
 
+    /**
+     * Constructor
+     * @param array $cards Card
+     */
     public function __construct($cards = array()) {
         $this->cards = $cards;
     }
 
+    /**
+     * Adds a card to the CardSet
+     * @param Card $card
+     */
     public function addCard(Card $card) {
         $this->cards[] = $card;
     }
 
+    /**
+     * Adds an array of cards to the CardSet
+     * @param array $cards Cards
+     */
     public function addCards(array $cards) {
         $this->cards = array_merge($this->cards, $cards);
     }
 
+    /**
+     * Returns all cards in this Card Set
+     * @return array of Cards
+     */
     public function allCards() {
         return $this->cards;
     }
 
+    /**
+     * Returns the current card count of this set
+     * @return int
+     */
     public function cardCount() {
         return count($this->cards);
     }
 
-    public function drawFromTop() {
-        return array_shift($this->cards);
-    }
-
-    public function shuffleCards() {
-
-    }
-
+    /**
+     * Renders the current cardset in text format
+     * @return string a list of the current cards in cardset
+     */
     public function render() {
         foreach ($this->cards as $card) {
             $cards .= $card->render() . ", ";

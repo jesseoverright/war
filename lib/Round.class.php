@@ -1,11 +1,17 @@
 <?php 
 
 class Round extends CardSet {
+    const INCOMPLETE = 1;
+    const WAR = 2;
+    const COMPLETE = 4;
+    const FORFEITED = 8;
+    const DRAW = 16;
+
     /**
      * Status of Round
      * @var boolean
      */
-    protected $round_complete = FALSE;
+    protected $round_status = INCOMPLETE;
 
     /**
      * Reference to player 1 Player object
@@ -41,23 +47,32 @@ class Round extends CardSet {
      * @return boolean round status
      */
     public function isComplete() {
-        return $this->round_complete;
+        return $this->round_status;
     }
 
     public function play() {
-        while ($this->round_complete !== TRUE) {
+        $minimum_required_cards = 1;
+        while ($this->round_status === INCOMPLETE || $this->round_status === WAR) {
             # check if either player is out of cards and end round
-            if ( $this->player1->cardCount() == 0 && $this->player2->cardCount() == 0) {
-                $this->round_complete = TRUE;
-            } else if ( $this->player1->cardCount() == 0 ) {
+            if ($this->round_status == WAR ) $minimum_required_cards = 2;
+            if ( $this->player1->cardCount() < $minimum_required_cards && $this->player2->cardCount() < $minimum_required_cards) {
+                $this->round_status = DRAW;
+            } else if ( $this->player1->cardCount() < $minimum_required_cards ) {
+                echo $this->player1->getName() . " forfeits this round.<br>";
                 # declare player 2 winner of this round
                 $this->round_winner = &$this->player2;
-                $this->round_complete = TRUE;
-            } else if ( $this->player2->cardCount() == 0 ) {
+                $this->round_status = FORFEITED;
+            } else if ( $this->player2->cardCount() < $minimum_required_cards ) {
+                echo $this->player2->getName() . " forfeits this round.<br>";
+
                 # declare player 1 winner of this hand
                 $this->round_winner = &$this->player1;
-                $this->round_complete = TRUE;
+                $this->round_status = FORFEITED;
             } else {
+                # in war, add top card
+                if ($this->round_status == WAR) {
+                    parent::addCards( array( $this->player1->drawFromTop(), $this->player2->drawFromTop() ) );
+                }
                 $this->playCards($this->player1->drawFromTop(), $this->player2->drawFromTop() );
             }
         }
@@ -82,14 +97,15 @@ class Round extends CardSet {
             echo $this->player1->getName() . " wins.<br>";
 
             $this->round_winner = &$this->player1;
-            $this->round_complete = TRUE;
+            $this->round_status = COMPLETE;
         } else if ( $card1->equalTo($card2) ) {
             echo "WAR!<br>";
+            $this->round_status = WAR;
         } else {
             echo $this->player1->getName() . " wins.<br>";
 
             $this->round_winner = &$this->player2;
-            $this->round_complete = TRUE;
+            $this->round_status = COMPLETE;
         }
     }
 
@@ -98,7 +114,7 @@ class Round extends CardSet {
      */
     private function winnerTakesAll() {
         
-        if ( $this->round_complete ) {
+        if ( $this->round_status == COMPLETE || $this->round_status == FORFEITED) {
             $this->round_winner->addCards( $this->allCards() );
         }
 

@@ -37,7 +37,9 @@ class Player extends CardSet implements Hand{
     public function render() {
         $render =  $this->name . "'s hand: ";
 
-        $render .= parent::render() . "<br>";
+        if ( $this->cardCount() == 0 ) {
+            $render .= "empty. <br>";
+        } else $render .= parent::render() . "<br>";
 
         return $render;
     }

@@ -1,10 +1,28 @@
 <?php
 
 class War implements Game {
-    protected $player1;
-    protected $player2;
-    protected $deck;
+    /**
+     * Player 1 Player object
+     * @var Player
+     */
+    private $player1;
 
+    /**
+     * Player 2 Player object
+     * @var Player
+     */
+    private $player2;
+
+    /**
+     * This game's deck of cards
+     * @var Deck
+     */
+    private $deck;
+
+    /**
+     * Constructor
+     * @param array $settings declares player details
+     */
     public function __construct( $settings ) {
         $deck = new Deck();
 
@@ -17,6 +35,9 @@ class War implements Game {
         }
     }
 
+    /**
+     * Play the game of war, by playing rounds of the game until one player forfeits
+     */
     public function play() {
         echo $this->player1->render();
 
@@ -35,6 +56,10 @@ class War implements Game {
         echo $this->declareWinner();
     }
 
+    /**
+     * Declare the winner of this game
+     * @return string winner!
+     */
     private function declareWinner() {
         # loser may have one card remaining if they had to forfeit a war.
         if ( $this->player1->cardCount() <= 1 ) {

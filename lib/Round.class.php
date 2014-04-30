@@ -44,51 +44,49 @@ class Round extends CardSet {
         return $this->round_complete;
     }
 
+    public function play() {
+        while ($this->round_complete !== TRUE) {
+            # check if either player is out of cards and end round
+            if ( $this->player1->cardCount() == 0 && $this->player2->cardCount() == 0) {
+                $this->round_complete = TRUE;
+            } else if ( $this->player1->cardCount() == 0 ) {
+                # declare player 2 winner of this round
+                $this->round_winner = &$this->player2;
+                $this->round_complete = TRUE;
+            } else if ( $this->player2->cardCount() == 0 ) {
+                # declare player 1 winner of this hand
+                $this->round_winner = &$this->player1;
+                $this->round_complete = TRUE;
+            } else {
+                $this->playCards($this->player1->drawFromTop(), $this->player2->drawFromTop() );
+            }
+        }
+
+        $this->winnerTakesAll();
+
+    }
+
     /**
      * Compares provided cards from players
      * @param  Card   $card1 player1's card
      * @param  Card   $card2 player2's card
      */
-    public function playCards($card1, $card2) {
-        # check if either player is out of cards
-        if ( $card1 == null && $card2 == null) {
-            $this->round_complete = TRUE;
-            return;
-        } else if ( $card1 == null ) {
-            # return player 2's card
-            parent::addCard($card2);
-
-            # declare player 2 winner of this round
-            $this->round_winner = &$this->player2;
-            $this->round_complete = TRUE;
-            return;
-        } else if ( $card2 == null ) {
-            # return player 1's card
-            parent::addCard($card1);
-
-            # declare player 1 winner of this hand
-            $this->round_winner = &$this->player1;
-            $this->round_complete = TRUE;
-            return;
-        }
-
-
+    private function playCards($card1, $card2) {
         parent::addCards( array($card1, $card2) );
 
-        echo "player 1 plays: " . $card1->render() . "<br>";
-        echo "player 2 plays: " . $card2->render() . "<br>";
+        echo $this->player1->getName() . " plays: " . $card1->render() . "<br>";
+        echo $this->player2->getName() . " plays: " . $card2->render() . "<br>";
 
 
         if ( $card1->greaterThan($card2) ) {
-            echo "winner!<br>";
-            echo "player 1 wins.";
+            echo $this->player1->getName() . " wins.<br>";
 
             $this->round_winner = &$this->player1;
             $this->round_complete = TRUE;
         } else if ( $card1->equalTo($card2) ) {
-            echo "WAR<br>";
+            echo "WAR!<br>";
         } else {
-            echo "loser<br>";
+            echo $this->player1->getName() . " wins.<br>";
 
             $this->round_winner = &$this->player2;
             $this->round_complete = TRUE;
@@ -97,14 +95,12 @@ class Round extends CardSet {
 
     /**
      * Gives cards in cardset to the winner of this round
-     * @return Player winner of the round
      */
-    public function winnerTakesAll() {
+    private function winnerTakesAll() {
         
         if ( $this->round_complete ) {
-            $this->round_winner = array_merge($this->round_winner, $this->allCards() );
+            $this->round_winner->addCards( $this->allCards() );
         }
 
-        return FALSE;
     }
 }

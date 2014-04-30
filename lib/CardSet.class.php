@@ -21,11 +21,6 @@ abstract class CardSet {
     }
 
     public function allCards() {
-        /*foreach ($this->cards as $card) {
-            $cards .= $card->render() . ", ";
-        }
-        $cards = substr($cards, 0, -2);
-        return $cards;*/
         return $this->cards;
     }
 
@@ -39,5 +34,13 @@ abstract class CardSet {
 
     public function shuffleCards() {
 
+    }
+
+    public function render() {
+        foreach ($this->cards as $card) {
+            $cards .= $card->render() . ", ";
+        }
+        $cards = substr($cards, 0, -2);
+        return $cards;
     }
 }

@@ -44,10 +44,27 @@ class Round extends CardSet {
 
     /**
      * Retreives current status of the round
-     * @return boolean round status
+     * @return string round_status
      */
-    public function isComplete() {
-        return $this->round_status;
+    public function status() {
+        switch ($this->round_status) {
+            case WAR:
+                return 'WAR';
+                break;
+            case COMPLETE:
+                return 'COMPLETE';
+                break;
+            case FORFEITED:
+                return 'FORFEITED';
+                break;
+            case DRAW:
+                return 'DRAW';
+                break;
+            case INCOMPLETE:
+            default:
+                return 'INCOMPLETE';
+                break;
+        }
     }
 
     public function play() {
@@ -72,6 +89,7 @@ class Round extends CardSet {
                 # in war, add top card
                 if ($this->round_status == WAR) {
                     parent::addCards( array( $this->player1->drawFromTop(), $this->player2->drawFromTop() ) );
+                    echo "Both players add a card<br>";
                 }
                 $this->playCards($this->player1->drawFromTop(), $this->player2->drawFromTop() );
             }
@@ -94,18 +112,18 @@ class Round extends CardSet {
 
 
         if ( $card1->greaterThan($card2) ) {
-            echo $this->player1->getName() . " wins.<br>";
-
             $this->round_winner = &$this->player1;
             $this->round_status = COMPLETE;
         } else if ( $card1->equalTo($card2) ) {
             echo "WAR!<br>";
             $this->round_status = WAR;
         } else {
-            echo $this->player1->getName() . " wins.<br>";
-
             $this->round_winner = &$this->player2;
             $this->round_status = COMPLETE;
+        }
+
+        if ($this->round_status === COMPLETE) {
+            echo $this->round_winner->getName() . " wins this round. " . $this->round_winner->getName() . " collects " . $this->render() . "<br>";
         }
     }
 

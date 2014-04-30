@@ -1,13 +1,27 @@
 <?php
 
 class Player extends CardSet implements Hand{
+    /**
+     * The name of this player
+     * @var string
+     */
     protected $name;
 
-    public function __construct( $name, $cards = array() ) {
+    /**
+     * Constructor
+     * @param string $name  name of player
+     * @param array  $cards cards
+     */
+    public function __construct( $name = 'Computer', $cards = array() ) {
+        if ( empty( $name ) ) $name = 'Computer';
         $this->name = $name;
         parent::__construct( $cards );
     }
 
+    /**
+     * Retrieves player name
+     * @return string
+     */
     public function getName() {
         return $this->name;
     }

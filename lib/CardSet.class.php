@@ -3,7 +3,7 @@
 abstract class CardSet {
     /**
      * Cards currently in this set
-     * 
+     *
      * @var array of Cards
      */
     protected $cards = array();
@@ -53,6 +53,7 @@ abstract class CardSet {
      * @return string a list of the current cards in cardset
      */
     public function render() {
+        $cards = "";
         foreach ($this->cards as $card) {
             $cards .= $card->render() . ", ";
         }

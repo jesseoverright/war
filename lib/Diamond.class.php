@@ -1,7 +1,7 @@
 <?php
 
 class Diamond extends SuitedCard {
-    const SUIT = 'Diamond';
+    const SUIT = '♦';
 
     /**
      * Constructor

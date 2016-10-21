@@ -1,7 +1,7 @@
 <?php
 
 class Heart extends SuitedCard {
-    const SUIT = 'Heart';
+    const SUIT = '♥';
 
     /**
      * Constructor

@@ -2,10 +2,10 @@
 
 abstract class SuitedCard implements Card, Suit {
     /**
-     * a static array of allowable cards 
+     * a static array of allowable cards
      * @var array
      */
-    public static $possible_values = array('Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Jack','Queen','King','Ace');
+    public static $possible_values = array('2','3','4','5','6','7','8','9','10','J','Q','K','A');
 
     /**
      * The Suit
@@ -25,7 +25,7 @@ abstract class SuitedCard implements Card, Suit {
      * @param string $suit  suit of this card
      */
     public function __construct( $value, $suit ) {
-        
+
         // allow for integer or string values to be passed
         if ( is_int($value) ) {
             if ( array_key_exists($value, SuitedCard::$possible_values) ) $this->value = $value;
@@ -86,6 +86,6 @@ abstract class SuitedCard implements Card, Suit {
      * @return string
      */
     public function render() {
-        return $this->getValue() . ' of ' . $this->getSuit() . 's';
+        return $this->getValue() . ' ' . $this->getSuit();
     }
 }
